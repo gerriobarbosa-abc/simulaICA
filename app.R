@@ -15,7 +15,7 @@ library(scales)
 library(tibble)
 library(DT)
 library(purrr)
-library(curl)
+requireNamespace("curl", quietly = TRUE)
 
 # -----------------------------------------------------------------------------
 # 2. Arquivos auxiliares
