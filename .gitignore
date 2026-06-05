@@ -21,6 +21,5 @@ app_back.R
 
 renv/library/
 renv/staging/
-.httr-oauth
-.DS_Store
-.quarto
+
+.positai
