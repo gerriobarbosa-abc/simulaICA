@@ -1,0 +1,26 @@
+# Configurações locais do RStudio
+.Rproj.user
+.Ruserdata
+
+# Histórico e objetos salvos da sessão R
+.Rhistory
+.RData
+
+# Variáveis de ambiente locais: senhas, tokens, chaves etc.
+.Renviron
+
+# Backups locais que não precisam ir para o GitHub
+app_back.R
+
+# Arquivos temporários
+*.tmp
+*.log
+
+# Exemplo: remover o # se existir uma base sensível
+# data/base_sensivel.rds
+
+renv/library/
+renv/staging/
+.httr-oauth
+.DS_Store
+.quarto
