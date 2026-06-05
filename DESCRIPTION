@@ -1,0 +1,14 @@
+Package: simulaICA
+Title: Simulador ICA
+Version: 0.0.0.9000
+Imports:
+    shiny,
+    dplyr,
+    ggplot2,
+    DT,
+    bslib,
+    htmltools,
+    showtext,
+    sysfonts,
+    curl
+Encoding: UTF-8

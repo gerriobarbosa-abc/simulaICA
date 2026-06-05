@@ -23,3 +23,4 @@ renv/library/
 renv/staging/
 
 .positai
+manifest.json

@@ -42,10 +42,9 @@ tema_app <- bslib::bs_theme(
 if (requireNamespace("sysfonts", quietly = TRUE) &&
     requireNamespace("showtext", quietly = TRUE)) {
 
-  sysfonts::font_add_google(
-    name = "Nunito",
-    family = "nunito"
-  )
+  try({
+    sysfonts::font_add_google("Nunito", "nunito")
+    showtext::showtext_auto()
+  }, silent = TRUE)
 
-  showtext::showtext_auto()
 }
