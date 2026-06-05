@@ -15,6 +15,7 @@ library(scales)
 library(tibble)
 library(DT)
 library(purrr)
+library(curl)
 
 # -----------------------------------------------------------------------------
 # 2. Arquivos auxiliares
