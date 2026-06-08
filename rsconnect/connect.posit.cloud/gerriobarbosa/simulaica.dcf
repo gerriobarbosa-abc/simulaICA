@@ -1,0 +1,12 @@
+name: simulaica
+title: simulaICA
+username: gerriobarbosa
+account: gerriobarbosa
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 019e9863-701d-4cf1-0976-cb307c6358cb
+bundleId:
+url: https://connect.posit.cloud/gerriobarbosa/content/019e9863-701d-4cf1-0976-cb307c6358cb
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

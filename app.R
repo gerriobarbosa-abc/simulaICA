@@ -279,8 +279,8 @@ ui <- page_navbar(
     div(
       class = "navbar-logo-custom",
       tags$img(
-        src = "logo_bem_comum.png",
-        alt = "Logo Bem Comum"
+        src = "logo_app.png",
+        alt = "Logo"
       )
     )
   )
