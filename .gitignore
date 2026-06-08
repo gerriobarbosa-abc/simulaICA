@@ -24,3 +24,6 @@ renv/staging/
 
 .positai
 manifest.json
+
+# metadados locais de publicação
+rsconnect/
