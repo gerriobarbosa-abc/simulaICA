@@ -271,11 +271,17 @@ ui <- page_navbar(
           conteudo = tagList(
 
             div(
-              id = "area_botao_xlsx",
+              class = "barra-exportacao-tabela",
+
               downloadButton(
                 outputId = "baixar_tabela_xlsx",
                 label = "Baixar tabela em XLSX",
                 class = "btn-download"
+              ),
+
+              div(
+                id = "botoes_dt_tabela",
+                class = "botoes-dt-tabela"
               )
             ),
 
@@ -712,15 +718,18 @@ server <- function(input, output, session) {
 
       callback = DT::JS(
         "
-      table.on('init.dt', function() {
-        var botaoXlsx = $('#baixar_tabela_xlsx');
-        var areaBotoes = $(table.table().container()).find('.dt-buttons');
+    table.on('init.dt', function() {
 
-        if (botaoXlsx.length && areaBotoes.length) {
-          botaoXlsx.detach().prependTo(areaBotoes);
-        }
-      });
-      "
+      var areaBotoesDT = $(table.table().container()).find('.dt-buttons');
+      var destino = $('#botoes_dt_tabela');
+
+      if (areaBotoesDT.length && destino.length) {
+        destino.empty();
+        areaBotoesDT.detach().appendTo(destino);
+      }
+
+    });
+    "
       ),
 
       options = list(
@@ -729,7 +738,7 @@ server <- function(input, output, session) {
         buttons = list(
           list(
             extend = "copyHtml5",
-            text = '<i class="fa-solid fa-copy"></i> Copy',
+            text = '<i class="fa fa-copy"></i> Copy',
             className = "btn-tabela-export",
             exportOptions = list(
               format = list(
@@ -739,7 +748,7 @@ server <- function(input, output, session) {
           ),
           list(
             extend = "csvHtml5",
-            text = '<i class="fa-solid fa-file-csv"></i> CSV',
+            text = '<i class="fa fa-file-text"></i> CSV',
             className = "btn-tabela-export",
             fieldSeparator = ";",
             bom = TRUE,
