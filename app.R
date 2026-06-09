@@ -15,6 +15,7 @@ library(scales)
 library(tibble)
 library(DT)
 library(purrr)
+# library(writexl)
 # requireNamespace("curl", quietly = TRUE)
 
 # -----------------------------------------------------------------------------
@@ -267,7 +268,20 @@ ui <- page_navbar(
         box_conteudo(
           titulo = "Municípios simulados",
           subtitulo = "A tabela mostra os municípios alterados, seu peso no recorte e o impacto gerado pela simulação.",
-          conteudo = DTOutput("tabela_municipio")
+          conteudo = tagList(
+            DTOutput("tabela_municipio"),
+
+            br(),
+
+            div(
+              class = "area-download",
+              downloadButton(
+                outputId = "baixar_tabela_xlsx",
+                label = "Baixar tabela em XLSX",
+                class = "btn-download"
+              )
+            )
+          )
         )
       )
     )
@@ -587,7 +601,27 @@ server <- function(input, output, session) {
   # ---------------------------------------------------------------------------
 
   grafico_pronto <- reactive({
-    grafico_simulacao_ica(resumo())
+    grafico_simulacao_ica(
+      resumo = resumo(),
+      size_rotulo = 12,
+      base_size = 16,
+      axis_text_x_size = 20,
+      axis_text_y_size = 16,
+      axis_title_y_size = 20,
+      plot_margin = ggplot2::margin(18, 24, 14, 16)
+    )
+  })
+
+  grafico_pronto_png <- reactive({
+    grafico_simulacao_ica(
+      resumo = resumo(),
+      size_rotulo = 20,
+      base_size = 46,
+      axis_text_x_size = 44,
+      axis_text_y_size = 42,
+      axis_title_y_size = 46,
+      plot_margin = ggplot2::margin(28, 32, 20, 22)
+    )
   })
 
   output$grafico_simulacao <- renderPlot({
@@ -622,7 +656,7 @@ server <- function(input, output, session) {
 
       ggplot2::ggsave(
         filename = file,
-        plot = grafico_pronto(),
+        plot = grafico_pronto_png(),
         width = 10,
         height = 6,
         dpi = 300,
@@ -637,16 +671,31 @@ server <- function(input, output, session) {
   # 5.13 Tabela DT dos municípios simulados
   # ---------------------------------------------------------------------------
 
-  output$tabela_municipio <- renderDT({
+  # -----------------------------------------------------
+  # 5.13.1 Tabela reativa dos municípios simulados
+  # -----------------------------------------------------
+
+  tabela_municipios_simulados <- reactive({
 
     req(input$municipios)
+    req(input$valor_simulacao)
+    req(input$modo_simulacao)
 
-    tabela <- criar_tabela_municipios_simulados(
+    criar_tabela_municipios_simulados(
       base = dados_recorte_ano(),
       municipios = input$municipios,
       valor_simulacao = input$valor_simulacao,
       modo_simulacao = input$modo_simulacao
     )
+  })
+
+  # ---------------------------------------------------------------------------
+  # 5.13 Tabela DT dos municípios simulados
+  # ---------------------------------------------------------------------------
+
+  output$tabela_municipio <- renderDT({
+
+    tabela <- tabela_municipios_simulados()
 
     datatable(
       tabela,
@@ -655,14 +704,27 @@ server <- function(input, output, session) {
       class = "stripe hover compact nowrap",
       options = list(
         dom = "Bfrtip",
-        buttons = c("copy", "csv", "excel"),
-        pageLength = 10,
+
+        buttons = list(
+          "copy",
+          "csv"
+        ),
+
+        pageLength = 20,
+
+        lengthMenu = list(
+          c(20, 50, 100, -1),
+          c("20", "50", "100", "Todos")
+        ),
+
         searching = TRUE,
         ordering = TRUE,
         responsive = TRUE,
+
         language = list(
           url = "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
         ),
+
         columnDefs = list(
           list(className = "dt-left", targets = c(1, 2)),
           list(className = "dt-center", targets = "_all")
@@ -706,41 +768,46 @@ server <- function(input, output, session) {
         fontWeight = "bold"
       )
   })
+
+
+  # ---------------------------------------------------------------------------
+  # 5.14 Download profissional da tabela em XLSX
+  # ---------------------------------------------------------------------------
+
+  output$baixar_tabela_xlsx <- downloadHandler(
+
+    filename = function() {
+
+      ufs_nome <- if (length(input$ufs) > 3) {
+        paste0(length(input$ufs), "_ufs")
+      } else {
+        paste(input$ufs, collapse = "_")
+      }
+
+      paste0(
+        "municipios_simulados_ica_",
+        ufs_nome, "_",
+        input$ano_ica, "_meta_",
+        input$ano_meta,
+        ".xlsx"
+      )
+    },
+
+    contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+    content = function(file) {
+
+      tabela <- tabela_municipios_simulados()
+
+      writexl::write_xlsx(
+        x = list(
+          "Municípios simulados" = tabela
+        ),
+        path = file
+      )
+    }
+  )
 }
-
-
-# tooltips_colunas <- c(
-#   "UF" = "Estado ao qual o município pertence.",
-#   "Município" = "Município selecionado para a simulação.",
-#   "Regional" = "Regional ou coordenadoria à qual o município está vinculado.",
-#   "Matrículas" = "Número de matrículas consideradas no município.",
-#   "Avaliados" = "Número de alunos avaliados usados como peso no cálculo do ICA agregado.",
-#   "ICA observado" = "Valor original do ICA do município antes da simulação.",
-#   "ICA simulado" = "Valor do ICA do município após aplicar a simulação.",
-#   "Diferença no município (p.p.)" = "Mudança no ICA do município, em pontos percentuais.",
-#   "Peso no recorte" = "Participação dos avaliados do município no total de avaliados do recorte selecionado.",
-#   "Impacto no recorte (p.p.)" = "Contribuição da mudança do município para o ICA agregado do recorte, em pontos percentuais."
-# )
-#
-# tooltips_usados <- unname(tooltips_colunas[names(tabela)])
-#
-# tooltips_usados[is.na(tooltips_usados)] <- "Informação da tabela."
-#
-# callback_tooltips <- DT::JS(
-#   sprintf(
-#     "
-#     var tooltips = %s;
-#     table.columns().every(function(index) {
-#       var header = $(this.header());
-#       header.attr('title', tooltips[index]);
-#       header.css('cursor', 'help');
-#     });
-#     ",
-#     jsonlite::toJSON(tooltips_usados, auto_unbox = TRUE)
-#   )
-# )
-
-
 # -----------------------------------------------------------------------------
 # 6. Rodar app
 # -----------------------------------------------------------------------------

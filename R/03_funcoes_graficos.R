@@ -2,7 +2,18 @@
 # FUNÇÕES DE GRÁFICOS
 # =============================================================================
 
-grafico_simulacao_ica <- function(resumo) {
+grafico_simulacao_ica <- function(
+    resumo,
+    largura_barra = 0.50,
+    alpha_barra = 0.96,
+    size_rotulo = 20.2,
+    vjust_rotulo = -0.55,
+    base_size = 40,
+    axis_text_x_size = 36,
+    axis_text_y_size = 36,
+    axis_title_y_size = 40,
+    plot_margin = ggplot2::margin(18, 24, 14, 16)
+) {
 
   dados_plot <- tibble::tibble(
     cenario = factor(
@@ -18,8 +29,8 @@ grafico_simulacao_ica <- function(resumo) {
 
   cores_barras <- c(
     "Observado" = "#5f83ad",
-    "Simulado" = "#4f9a75",
-    "Meta" = "#dc6b76"
+    "Simulado"  = "#4f9a75",
+    "Meta"      = "#dc6b76"
   )
 
   ggplot2::ggplot(
@@ -27,8 +38,8 @@ grafico_simulacao_ica <- function(resumo) {
     ggplot2::aes(x = cenario, y = valor, fill = cenario)
   ) +
     ggplot2::geom_col(
-      width = 0.50,
-      alpha = 0.96,
+      width = largura_barra,
+      alpha = alpha_barra,
       show.legend = FALSE
     ) +
     ggplot2::geom_text(
@@ -39,8 +50,8 @@ grafico_simulacao_ica <- function(resumo) {
           decimal.mark = ","
         )
       ),
-      vjust = -0.55,
-      size = 6.2,
+      vjust = vjust_rotulo,
+      size = size_rotulo,
       fontface = "bold",
       family = "nunito",
       color = "#292820"
@@ -62,7 +73,7 @@ grafico_simulacao_ica <- function(resumo) {
       y = "ICA estadual"
     ) +
     ggplot2::theme_minimal(
-      base_size = 18,
+      base_size = base_size,
       base_family = "nunito"
     ) +
     ggplot2::theme(
@@ -71,17 +82,17 @@ grafico_simulacao_ica <- function(resumo) {
         color = "#292820"
       ),
       axis.text.x = ggplot2::element_text(
-        size = 17,
+        size = axis_text_x_size,
         face = "bold",
         color = "#696a67",
         margin = ggplot2::margin(t = 8)
       ),
       axis.text.y = ggplot2::element_text(
-        size = 15,
+        size = axis_text_y_size,
         color = "#696a67"
       ),
       axis.title.y = ggplot2::element_text(
-        size = 17,
+        size = axis_title_y_size,
         face = "bold",
         color = "#696a67",
         margin = ggplot2::margin(r = 12)
@@ -92,6 +103,6 @@ grafico_simulacao_ica <- function(resumo) {
         color = "#e8ecf1",
         linewidth = 0.55
       ),
-      plot.margin = ggplot2::margin(18, 24, 14, 16)
+      plot.margin = plot_margin
     )
 }

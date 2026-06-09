@@ -88,19 +88,34 @@ card_resultado <- function(titulo,
   )
 }
 
+
 box_conteudo <- function(titulo,
                          subtitulo = NULL,
                          conteudo) {
 
-  htmltools::div(
-    class = "box-grafico",
-    htmltools::h4(titulo),
-    if (!is.null(subtitulo)) {
-      htmltools::p(
-        class = "box-subtitulo",
-        subtitulo
+  bslib::card(
+    class = "box-conteudo",
+
+    bslib::card_header(
+      htmltools::div(
+        class = "box-conteudo-header",
+
+        htmltools::div(
+          class = "box-conteudo-titulo",
+          titulo
+        ),
+
+        if (!is.null(subtitulo)) {
+          htmltools::div(
+            class = "box-conteudo-subtitulo",
+            subtitulo
+          )
+        }
       )
-    },
-    conteudo
+    ),
+
+    bslib::card_body(
+      conteudo
+    )
   )
 }
