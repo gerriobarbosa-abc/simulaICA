@@ -785,4 +785,103 @@ table.dataTable thead th:hover {
 }
 
 
+/* =========================================================
+   BOTÕES DE EXPORTAÇÃO DA TABELA: XLSX, COPY E CSV
+   ========================================================= */
+/* Área dos botões */
+.dataTables_wrapper .dt-buttons {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 14px !important;
+  width: auto !important;
+}
 
+/* Botão XLSX */
+.dataTables_wrapper .dt-buttons #baixar_tabela_xlsx,
+.dataTables_wrapper .dt-buttons a#baixar_tabela_xlsx,
+.dataTables_wrapper .dt-buttons .btn-download {
+  background-color: #396496 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 9px !important;
+  padding: 8px 13px !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+  box-shadow: 0 4px 10px rgba(57, 100, 150, 0.18) !important;
+  min-width: 130px !important;
+  width: auto !important;
+  text-align: center !important;
+  transition: all 0.18s ease-in-out !important;
+  white-space: nowrap !important;
+}
+
+/* Botões Copy e CSV */
+.dataTables_wrapper .dt-buttons button.btn-tabela-export,
+.dataTables_wrapper .dt-buttons a.btn-tabela-export,
+.dataTables_wrapper .dt-buttons .btn-tabela-export,
+button.dt-button.btn-tabela-export,
+a.dt-button.btn-tabela-export,
+.dt-button.btn-tabela-export {
+  background-color: #396496 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 9px !important;
+  padding: 8px 13px !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+  box-shadow: 0 4px 10px rgba(57, 100, 150, 0.18) !important;
+  min-width: 78px !important;
+  width: auto !important;
+  text-align: center !important;
+  transition: all 0.18s ease-in-out !important;
+  white-space: nowrap !important;
+}
+
+/* Texto interno dos botões Copy e CSV */
+.dataTables_wrapper .dt-buttons button.btn-tabela-export span,
+.dataTables_wrapper .dt-buttons a.btn-tabela-export span,
+.dataTables_wrapper .dt-buttons .btn-tabela-export span,
+button.dt-button.btn-tabela-export span,
+a.dt-button.btn-tabela-export span,
+.dt-button.btn-tabela-export span {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+/* Ícones dos botões */
+.dataTables_wrapper .dt-buttons i,
+.dataTables_wrapper .dt-buttons .fa,
+.dataTables_wrapper .dt-buttons .fa-solid,
+.dataTables_wrapper .dt-buttons .glyphicon {
+  margin-right: 6px !important;
+  color: #ffffff !important;
+}
+
+/* Hover dos botões XLSX, Copy e CSV */
+.dataTables_wrapper .dt-buttons #baixar_tabela_xlsx:hover,
+.dataTables_wrapper .dt-buttons a#baixar_tabela_xlsx:hover,
+.dataTables_wrapper .dt-buttons .btn-download:hover,
+.dataTables_wrapper .dt-buttons button.btn-tabela-export:hover,
+.dataTables_wrapper .dt-buttons a.btn-tabela-export:hover,
+.dataTables_wrapper .dt-buttons .btn-tabela-export:hover,
+button.dt-button.btn-tabela-export:hover,
+a.dt-button.btn-tabela-export:hover,
+.dt-button.btn-tabela-export:hover {
+  background-color: #1F7D55 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 5px 12px rgba(31, 125, 85, 0.28) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Remove aparência cinza padrão do DataTables */
+button.dt-button,
+div.dt-button,
+a.dt-button,
+input.dt-button {
+  background-image: none !important;
+}

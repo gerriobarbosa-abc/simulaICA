@@ -269,18 +269,17 @@ ui <- page_navbar(
           titulo = "Municípios simulados",
           subtitulo = "A tabela mostra os municípios alterados, seu peso no recorte e o impacto gerado pela simulação.",
           conteudo = tagList(
-            DTOutput("tabela_municipio"),
-
-            br(),
 
             div(
-              class = "area-download",
+              id = "area_botao_xlsx",
               downloadButton(
                 outputId = "baixar_tabela_xlsx",
                 label = "Baixar tabela em XLSX",
                 class = "btn-download"
               )
-            )
+            ),
+
+            DTOutput("tabela_municipio")
           )
         )
       )
@@ -697,24 +696,66 @@ server <- function(input, output, session) {
 
     tabela <- tabela_municipios_simulados()
 
+    formato_exportacao_br <- DT::JS(
+      "
+    function(data, row, column, node) {
+      return $(node).text().trim();
+    }
+    "
+    )
+
     datatable(
       tabela,
       rownames = FALSE,
       extensions = c("Buttons", "Responsive"),
       class = "stripe hover compact nowrap",
+
+      callback = DT::JS(
+        "
+      table.on('init.dt', function() {
+        var botaoXlsx = $('#baixar_tabela_xlsx');
+        var areaBotoes = $(table.table().container()).find('.dt-buttons');
+
+        if (botaoXlsx.length && areaBotoes.length) {
+          botaoXlsx.detach().prependTo(areaBotoes);
+        }
+      });
+      "
+      ),
+
       options = list(
         dom = "Bfrtip",
 
         buttons = list(
-          "copy",
-          "csv"
+          list(
+            extend = "copyHtml5",
+            text = '<i class="fa-solid fa-copy"></i> Copy',
+            className = "btn-tabela-export",
+            exportOptions = list(
+              format = list(
+                body = formato_exportacao_br
+              )
+            )
+          ),
+          list(
+            extend = "csvHtml5",
+            text = '<i class="fa-solid fa-file-csv"></i> CSV',
+            className = "btn-tabela-export",
+            fieldSeparator = ";",
+            bom = TRUE,
+            exportOptions = list(
+              format = list(
+                body = formato_exportacao_br
+              )
+            )
+          )
         ),
 
         pageLength = 20,
 
         lengthMenu = list(
-          c(20, 50, 100, -1),
-          c("20", "50", "100", "Todos")
+          c(20, 50, 100),
+          c("20", "50", "100")
         ),
 
         searching = TRUE,
@@ -801,7 +842,7 @@ server <- function(input, output, session) {
 
       writexl::write_xlsx(
         x = list(
-          "Municípios simulados" = tabela
+          "Municipios simulados" = tabela
         ),
         path = file
       )
