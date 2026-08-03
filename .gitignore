@@ -27,3 +27,6 @@ manifest.json
 
 # metadados locais de publicação
 rsconnect/
+
+# funcao de teste de erros
+00-teste_erro_files.R

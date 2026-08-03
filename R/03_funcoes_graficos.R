@@ -70,7 +70,7 @@ grafico_simulacao_ica <- function(
     ) +
     ggplot2::labs(
       x = NULL,
-      y = "ICA estadual"
+      y = "ICA do Estado"
     ) +
     ggplot2::theme_minimal(
       base_size = base_size,

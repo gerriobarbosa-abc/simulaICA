@@ -902,3 +902,336 @@ a.dt-button,
 input.dt-button {
   background-image: none !important;
 }
+
+
+/* =============================================================================
+   DESTAQUES DA TABELA DE MUNICÍPIOS
+============================================================================= */
+
+/* ICA simulado */
+#tabela_municipio table.dataTable tbody td.coluna-ica-simulado {
+  background-color: #e9f5ef !important;
+  color: #1f7d55 !important;
+  font-weight: 800 !important;
+}
+
+/* Impacto na UF */
+#tabela_municipio table.dataTable tbody td.coluna-impacto {
+  background-color: #fff8e8 !important;
+  color: #292820 !important;
+  font-weight: 800 !important;
+}
+
+/* Linha consolidada do grupo */
+#tabela_municipio table.dataTable tbody tr.linha-grupo > td {
+  background-color: #edf3f8 !important;
+  color: #292820 !important;
+  font-weight: 900 !important;
+  border-top: 2px solid #396496 !important;
+  border-bottom: 2px solid #396496 !important;
+}
+
+/* Células especiais dentro da linha do grupo */
+#tabela_municipio table.dataTable tbody tr.linha-grupo
+> td.coluna-ica-simulado {
+  background-color: #dceee4 !important;
+  color: #176843 !important;
+}
+
+#tabela_municipio table.dataTable tbody tr.linha-grupo
+> td.coluna-impacto {
+  background-color: #fbecc9 !important;
+  color: #292820 !important;
+}
+
+
+/* =============================================================================
+   ACABAMENTO VISUAL DA TABELA
+============================================================================= */
+
+#tabela_municipio .dataTables_wrapper {
+  width: 100%;
+  font-family: Nunito, Arial, sans-serif;
+}
+
+/* Estrutura geral */
+#tabela_municipio table.dataTable {
+  width: 100% !important;
+  border: 1px solid #e3e7eb !important;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 16px rgba(41, 40, 32, 0.05);
+}
+
+/* Cabeçalho */
+#tabela_municipio table.dataTable thead th {
+  background-color: #396496 !important;
+  color: #ffffff !important;
+  padding: 12px 10px !important;
+  font-size: 0.88rem !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+  vertical-align: middle !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-bottom: none !important;
+}
+
+/* Corpo */
+#tabela_municipio table.dataTable tbody td {
+  padding: 10px 10px !important;
+  font-size: 0.88rem !important;
+  vertical-align: middle !important;
+  border-bottom: 1px solid #edf0f2 !important;
+}
+
+/* Linhas alternadas */
+#tabela_municipio table.dataTable.stripe tbody tr.odd > td {
+  background-color: #f8f9fb;
+}
+
+/* Hover */
+#tabela_municipio table.dataTable.hover tbody tr:hover > td {
+  background-color: #eef4f9 !important;
+}
+
+/* Mantém os destaques mesmo no hover */
+#tabela_municipio table.dataTable.hover
+tbody tr:hover td.coluna-ica-simulado {
+  background-color: #dceee4 !important;
+}
+
+#tabela_municipio table.dataTable.hover
+tbody tr:hover td.coluna-impacto {
+  background-color: #fbecc9 !important;
+}
+
+
+
+/* MELHOR BUSCA, SELETOR E RODAPÉ */
+
+/* Controles acima da tabela */
+#tabela_municipio .dataTables_length,
+#tabela_municipio .dataTables_filter {
+  margin-top: 8px !important;
+  margin-bottom: 14px !important;
+  color: #7a828a !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+}
+
+/* Campo de busca */
+#tabela_municipio .dataTables_filter input {
+  min-width: 220px;
+  margin-left: 8px !important;
+  padding: 7px 10px !important;
+  background-color: #fbfcfd !important;
+  border: 1px solid #e3e8ed !important;
+  border-radius: 10px !important;
+  outline: none !important;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+#tabela_municipio .dataTables_filter input:focus {
+  border-color: #8da8c1 !important;
+  box-shadow: 0 0 0 3px rgba(111, 143, 175, 0.12) !important;
+}
+
+/* Quantidade de linhas */
+#tabela_municipio .dataTables_length select {
+  margin: 0 5px !important;
+  padding: 5px 26px 5px 8px !important;
+  background-color: #fbfcfd !important;
+  border: 1px solid #e3e8ed !important;
+  border-radius: 9px !important;
+}
+
+/* Informações */
+#tabela_municipio .dataTables_info {
+  padding-top: 16px !important;
+  color: #7a828a !important;
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
+}
+
+/* Paginação */
+#tabela_municipio .dataTables_paginate {
+  padding-top: 12px !important;
+}
+
+#tabela_municipio .dataTables_paginate .paginate_button {
+  min-width: 34px !important;
+  margin: 0 2px !important;
+  padding: 6px 10px !important;
+  color: #6f8faf !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+}
+
+#tabela_municipio .dataTables_paginate .paginate_button:hover {
+  color: #456b59 !important;
+  background: #e5f0ea !important;
+  border: none !important;
+}
+
+#tabela_municipio .dataTables_paginate .paginate_button.current {
+  color: #496a89 !important;
+  background: #e4edf5 !important;
+  border: none !important;
+}
+
+
+/* DEIXAR OS TRÊS BOTÕES MAIS UNIFORMES */
+
+/* Barra XLSX, Copy e CSV */
+.barra-exportacao-tabela {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-bottom: 18px !important;
+}
+
+/* Destino dos botões do DT */
+#botoes_dt_tabela,
+.botoes-dt-tabela {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#botoes_dt_tabela .dt-buttons {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+
+/* Estilo comum aos três botões */
+.barra-exportacao-tabela #baixar_tabela_xlsx,
+#botoes_dt_tabela .dt-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+
+  min-height: 42px !important;
+  padding: 9px 15px !important;
+
+  background-color: #6f8faf !important;
+  background-image: none !important;
+  color: #ffffff !important;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  font-family: Nunito, Arial, sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  white-space: nowrap !important;
+  box-shadow: 0 5px 12px rgba(111, 143, 175, 0.18) !important;
+
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease !important;
+}
+
+/* XLSX mais largo */
+.barra-exportacao-tabela #baixar_tabela_xlsx {
+  min-width: 190px !important;
+}
+
+/* Copy e CSV */
+#botoes_dt_tabela .dt-button {
+  min-width: 92px !important;
+}
+
+/* Hover */
+.barra-exportacao-tabela #baixar_tabela_xlsx:hover,
+#botoes_dt_tabela .dt-button:hover {
+  background-color: #6f9f88 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: none !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 7px 15px rgba(111, 159, 136, 0.22) !important;
+}
+
+
+/* CENTRALIZAÇÃO DOS TEXTOS E VALORES DOS CARDS */
+
+.resultado-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.resultado-label {
+  width: 100%;
+  text-align: center;
+}
+
+.resultado-valor {
+  width: 100%;
+  text-align: center;
+}
+
+.resultado-label-com-tooltip {
+  width: 100%;
+  justify-content: center;
+}
+
+
+/* EFEITO SUAVE AO PASSAR O MOUSE NOS CARDS */
+
+.resultado-card {
+  transition:
+    background-color 0.22s ease,
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+/* Card azul */
+.resultado-card:hover {
+  background-color: #edf3f8;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(57, 100, 150, 0.14);
+}
+
+/* Card verde */
+.resultado-card.verde:hover {
+  background-color: #edf7f2;
+  box-shadow: 0 12px 26px rgba(31, 125, 85, 0.14);
+}
+
+/* Card laranja */
+.resultado-card.laranja:hover {
+  background-color: #fff8e8;
+  box-shadow: 0 12px 26px rgba(248, 178, 33, 0.16);
+}
+
+/* Card vermelho */
+.resultado-card.vermelho:hover {
+  background-color: #fbeff1;
+  box-shadow: 0 12px 26px rgba(212, 72, 86, 0.13);
+}
+
+/* Card cinza */
+.resultado-card.cinza:hover {
+  background-color: #f1f2f3;
+  box-shadow: 0 12px 26px rgba(105, 106, 103, 0.13);
+}

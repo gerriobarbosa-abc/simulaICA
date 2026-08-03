@@ -32,7 +32,8 @@ source("R/03_funcoes_graficos.R")
 # 3. Leitura e preparação da base
 # -----------------------------------------------------------------------------
 
-dados <- readRDS("data/dados_ica.rds")
+dados <- readRDS("data/dados_ica.rds") |>
+  dplyr::mutate(regional = '-')
 
 dados <- preparar_dados_ica(dados)
 
@@ -51,7 +52,11 @@ ui <- page_navbar(
   theme = tema_app,
 
   header = tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    tags$link(
+      rel = "stylesheet",
+      type = "text/css",
+      href = "custom.css"
+    )
   ),
 
   nav_panel(
@@ -90,7 +95,7 @@ ui <- page_navbar(
             class = "botoes-filtro",
             actionButton(
               inputId = "selecionar_todos_ufs",
-              label = "Todos os estados",
+              label = "Todos os Estados",
               class = "btn-filtro"
             ),
             actionButton(
@@ -139,7 +144,7 @@ ui <- page_navbar(
             class = "botoes-filtro",
             actionButton(
               inputId = "selecionar_todos_municipios",
-              label = "Todos do recorte",
+              label = "Todos os Municípios",
               class = "btn-filtro"
             ),
             actionButton(
@@ -185,33 +190,41 @@ ui <- page_navbar(
             ),
             div(
               class = "bloco-orientacao-descricao",
-              "Selecione um ou mais estados e depois escolha os municípios que serão simulados. ",
-              "O app recalcula o ICA agregado do recorte selecionado, ponderando os municípios pelo número de alunos avaliados."
+              "Selecione uma UF e, em seguida, escolha os municípios que deseja incluir na simulação. ",
+              "O app recalcula o ICA da rede municipal para o grupo selecionado e mostra, de forma simples, como os valores simulados alteram o resultado desses municípios e quanto essa mudança influencia o ICA geral da UF."
             )
           )
         ),
+
+        # ADD 3 cartoes - grupo
 
         layout_columns(
           col_widths = c(4, 4, 4),
 
           card_resultado(
-            titulo = "ICA observado do recorte",
-            output_id = "card_ica_observado",
-            tooltip = "ICA agregado do recorte selecionado antes da simulação. O cálculo é ponderado pelo número de alunos avaliados."
+            titulo = "ICA Observado - GRUPO",
+            output_id = "card_grupo_ica_observado",
+            tooltip = paste(
+              "ICA estimado para o grupo de municípios selecionados antes da simulação (rede municipal).",
+              "Quando houver apenas um município, aparecerá o valor do seu ICA (rede municipal)."
+            )
           ),
 
           card_resultado(
-            titulo = "ICA simulado do recorte",
-            output_id = "card_ica_simulado",
+            titulo = "ICA Simulado - GRUPO",
+            output_id = "card_grupo_ica_simulado",
             classe = "verde",
-            tooltip = "ICA agregado após aplicar a simulação aos municípios selecionados."
+            tooltip = paste(
+              "ICA estimado para o grupo de municípios selecionados após a simulação (rede municipal).",
+              "Quando houver apenas um município, aparecerá o valor do seu ICA (rede municipal)."
+            )
           ),
 
           card_resultado(
-            titulo = "Mudança no recorte",
-            output_id = "card_mudanca",
+            titulo = "Mudança - GRUPO",
+            output_id = "card_grupo_mudanca",
             classe = "laranja",
-            tooltip = "Diferença entre o ICA simulado e o ICA observado, em pontos percentuais."
+            tooltip = "Diferença entre o ICA Simulado-GRUPO e o ICA Observado-GRUPO (em p.p)."
           )
         ),
 
@@ -221,32 +234,58 @@ ui <- page_navbar(
           col_widths = c(4, 4, 4),
 
           card_resultado(
-            titulo = "Meta do recorte",
+            titulo = "ICA Observado - UF",
+            output_id = "card_ica_observado",
+            tooltip = "ICA estimado para UF (rede municipal)."
+          ),
+
+          card_resultado(
+            titulo = "ICA Simulado - UF",
+            output_id = "card_ica_simulado",
+            classe = "verde",
+            tooltip = "ICA estimado para UF (rede municipal) após simulação para municípios selecionados."
+          ),
+
+          card_resultado(
+            titulo = "Mudança - UF",
+            output_id = "card_mudanca",
+            classe = "laranja",
+            tooltip = "Diferença entre o ICA Simulado-UF e o ICA Observado-UF (em p.p)."
+          )
+        ),
+
+        br(),
+
+        layout_columns(
+          col_widths = c(4, 4, 4),
+
+          card_resultado(
+            titulo = "Meta - UF",
             output_id = "card_meta",
             classe = "vermelho",
             tooltip = "Meta agregada do recorte para o ano escolhido, usando a mesma ponderação por alunos avaliados."
           ),
 
           card_resultado(
-            titulo = "Distância antes",
+            titulo = "Distância - Antes da Simulação",
             output_id = "card_dist_antes",
             classe = "cinza",
-            tooltip = "Diferença entre a meta e o ICA observado. Valor positivo indica quanto falta para atingir a meta; valor negativo indica quanto o recorte já superou a meta."
+            tooltip = "Diferença entre a Meta-UF e o ICA Observado-UF. Valor positivo indica o quanto falta para UF atingir a meta; valor negativo indica o quanto a UF já superou a meta."
           ),
 
           card_resultado(
-            titulo = "Distância depois",
+            titulo = "Distância - Após a Simulação",
             output_id = "card_dist_depois",
             classe = "cinza",
-            tooltip = "Diferença entre a meta e o ICA simulado. Valor positivo indica quanto ainda falta para atingir a meta; valor negativo indica quanto o recorte passou da meta após a simulação."
+            tooltip = "Diferença entre a Meta-UF e o ICA Simulado-UF. Valor positivo indica o quanto falta para UF atingir a meta; valor negativo indica o quanto a UF já superou a meta."
           )
         ),
 
         br(),
 
         box_conteudo(
-          titulo = "ICA observado, simulado e meta do recorte",
-          subtitulo = "O gráfico compara o resultado observado do recorte, o resultado após a simulação e a meta escolhida.",
+          titulo = "ICA observado, simulado e meta da UF",
+          #subtitulo = "O",
           conteudo = tagList(
             plotOutput("grafico_simulacao", height = "430px"),
 
@@ -267,7 +306,11 @@ ui <- page_navbar(
 
         box_conteudo(
           titulo = "Municípios simulados",
-          subtitulo = "A tabela mostra os municípios alterados, seu peso no recorte e o impacto gerado pela simulação.",
+          subtitulo = paste(
+            "A primeira linha apresenta o resultado consolidado do grupo de municípios selecionados.",
+            "As demais linhas mostram os resultados de cada município, como seu peso no número de crianças avaliadas na UF",
+            "e o impacto gerado pela simulação."
+          ),
           conteudo = tagList(
 
             div(
@@ -375,7 +418,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(
       session = session,
       inputId = "municipios",
-      choices = setNames(
+      choices = stats::setNames(
         municipios$co_municipio,
         municipios$nome_exibicao
       ),
@@ -517,6 +560,47 @@ server <- function(input, output, session) {
     )
   })
 
+  # add simulacao - por grupo
+  # ---------------------------------------------------------------------------
+  # Resumo dos municípios selecionados
+  # ---------------------------------------------------------------------------
+
+  resumo_grupo <- reactive({
+
+    req(input$municipios)
+
+    validate(
+      need(
+        length(input$municipios) > 0,
+        "Selecione pelo menos um município."
+      )
+    )
+
+    # Municípios selecionados antes da simulação
+    base_grupo_observada <- dados_recorte_ano() |>
+      dplyr::filter(
+        co_municipio %in% input$municipios
+      )
+
+    # Os mesmos municípios após a simulação
+    base_grupo_simulada <- dados_simulados() |>
+      dplyr::filter(
+        co_municipio %in% input$municipios
+      )
+
+    validate(
+      need(
+        nrow(base_grupo_observada) > 0,
+        "Não há dados para os municípios selecionados."
+      )
+    )
+
+    calcular_resumo_grupo(
+      base_observada = base_grupo_observada,
+      base_simulada = base_grupo_simulada
+    )
+  })
+
 
   # ---------------------------------------------------------------------------
   # 5.9 Resumo da simulação
@@ -575,6 +659,35 @@ server <- function(input, output, session) {
   # ---------------------------------------------------------------------------
   # 5.10 Cards
   # ---------------------------------------------------------------------------
+
+  # ---------------------------------------------------------------------------
+  # Cards do grupo de municípios selecionados
+  # ---------------------------------------------------------------------------
+  # add - por grupos
+  output$card_grupo_ica_observado <- renderText({
+
+    fmt_pct(
+      resumo_grupo()$ica_observado
+    )
+  })
+
+
+  output$card_grupo_ica_simulado <- renderText({
+
+    fmt_pct(
+      resumo_grupo()$ica_simulado
+    )
+  })
+
+
+  output$card_grupo_mudanca <- renderText({
+
+    fmt_pp(
+      resumo_grupo()$mudanca
+    )
+  })
+
+  ###
 
   output$card_ica_observado <- renderText({
     fmt_pct(resumo()$ica_observado)
@@ -686,10 +799,26 @@ server <- function(input, output, session) {
     req(input$valor_simulacao)
     req(input$modo_simulacao)
 
+    # Garante que um ou vários municípios sejam sempre
+    # tratados como um vetor simples de caracteres.
+    municipios_selecionados <- as.character(
+      unlist(
+        input$municipios,
+        use.names = FALSE
+      )
+    )
+
+    validate(
+      need(
+        length(municipios_selecionados) > 0,
+        "Selecione pelo menos um município."
+      )
+    )
+
     criar_tabela_municipios_simulados(
       base = dados_recorte_ano(),
-      municipios = input$municipios,
-      valor_simulacao = input$valor_simulacao,
+      municipios = municipios_selecionados,
+      valor_simulacao = as.numeric(input$valor_simulacao),
       modo_simulacao = input$modo_simulacao
     )
   })
@@ -698,39 +827,146 @@ server <- function(input, output, session) {
   # 5.13 Tabela DT dos municípios simulados
   # ---------------------------------------------------------------------------
 
-  output$tabela_municipio <- renderDT({
+  output$tabela_municipio <- DT::renderDT({
 
     tabela <- tabela_municipios_simulados()
 
-    formato_exportacao_br <- DT::JS(
-      "
-    function(data, row, column, node) {
-      return $(node).text().trim();
-    }
-    "
+    colunas_esperadas <- c(
+      "UF",
+      "Município",
+      "Regional",
+      "Matrículas",
+      "Avaliados",
+      "Peso na UF",
+      "ICA observado",
+      "ICA simulado",
+      "Diferença (p.p.)",
+      "Impacto na UF (p.p.)"
     )
 
-    datatable(
+    validate(
+      need(
+        identical(names(tabela), colunas_esperadas),
+        paste0(
+          "Estrutura incorreta da tabela. Colunas recebidas: ",
+          paste(names(tabela), collapse = " | ")
+        )
+      )
+    )
+
+    validate(
+      need(
+        nrow(tabela) > 0,
+        "Selecione pelo menos um município com dados disponíveis."
+      )
+    )
+
+    # Segurança: a tabela enviada ao DataTables deve conter apenas
+    # vetores atômicos, nunca colunas-lista.
+    colunas_lista <- vapply(
       tabela,
+      is.list,
+      logical(1)
+    )
+
+    validate(
+      need(
+        !any(colunas_lista),
+        paste0(
+          "A tabela possui coluna do tipo lista: ",
+          paste(
+            names(tabela)[colunas_lista],
+            collapse = ", "
+          )
+        )
+      )
+    )
+
+    formato_exportacao_br <- DT::JS(
+      "
+      function(data, row, column, node) {
+        return $(node).text().trim();
+      }
+      "
+    )
+
+    formatar_inteiro <- DT::JS(
+      "
+      function(data, type, row, meta) {
+        if (type !== 'display') return data;
+        if (data === null || data === '' || isNaN(Number(data))) return '-';
+
+        return new Intl.NumberFormat(
+          'pt-BR',
+          {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          }
+        ).format(Number(data));
+      }
+      "
+    )
+
+    formatar_percentual <- DT::JS(
+      "
+      function(data, type, row, meta) {
+        if (type !== 'display') return data;
+        if (data === null || data === '' || isNaN(Number(data))) return '-';
+
+        return new Intl.NumberFormat(
+          'pt-BR',
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        ).format(Number(data) * 100) + '%';
+      }
+      "
+    )
+
+    formatar_pp <- DT::JS(
+      "
+      function(data, type, row, meta) {
+        if (type !== 'display') return data;
+        if (data === null || data === '' || isNaN(Number(data))) return '-';
+
+        return new Intl.NumberFormat(
+          'pt-BR',
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        ).format(Number(data));
+      }
+      "
+    )
+
+    DT::datatable(
+      data = tabela,
       rownames = FALSE,
       extensions = c("Buttons", "Responsive"),
       class = "stripe hover compact nowrap",
+      escape = TRUE,
+      width = '100%',
 
       callback = DT::JS(
         "
-    table.on('init.dt', function() {
+        table.on('init.dt', function() {
 
-      var areaBotoesDT = $(table.table().container()).find('.dt-buttons');
-      var destino = $('#botoes_dt_tabela');
+          var areaBotoesDT =
+            $(table.table().container()).find('.dt-buttons');
 
-      if (areaBotoesDT.length && destino.length) {
-        destino.empty();
-        areaBotoesDT.detach().appendTo(destino);
-      }
+          var destino = $('#botoes_dt_tabela');
 
-    });
-    "
+          if (areaBotoesDT.length && destino.length) {
+            destino.empty();
+            areaBotoesDT.detach().appendTo(destino);
+          }
+
+        });
+        "
       ),
+
 
       options = list(
         dom = "Bfrtip",
@@ -738,7 +974,7 @@ server <- function(input, output, session) {
         buttons = list(
           list(
             extend = "copyHtml5",
-            text = '<i class="fa fa-copy"></i> Copy',
+            text = '<i class=\"fa fa-copy\"></i> Copy',
             className = "btn-tabela-export",
             exportOptions = list(
               format = list(
@@ -748,7 +984,7 @@ server <- function(input, output, session) {
           ),
           list(
             extend = "csvHtml5",
-            text = '<i class="fa fa-file-text"></i> CSV',
+            text = '<i class=\"fa fa-file-text\"></i> CSV',
             className = "btn-tabela-export",
             fieldSeparator = ";",
             bom = TRUE,
@@ -770,54 +1006,74 @@ server <- function(input, output, session) {
         searching = TRUE,
         ordering = TRUE,
         responsive = TRUE,
+        autoWidth = FALSE,
+
+        createdRow = DT::JS(
+          "
+          function(row, data, dataIndex) {
+
+            if (data[0] === 'Grupo' && data[1] === 'Grupo') {
+              $(row).addClass('linha-grupo');
+            }
+
+          }
+          "
+        ),
 
         language = list(
-          url = "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+          url = paste0(
+            "//cdn.datatables.net/plug-ins/",
+            "1.13.6/i18n/pt-BR.json"
+          )
         ),
 
         columnDefs = list(
-          list(className = "dt-left", targets = c(1, 2)),
-          list(className = "dt-center", targets = "_all")
+          # UF, Município e Regional
+          list(
+            targets = c(0, 1, 2),
+            className = "dt-left"
+          ),
+
+          # Matrículas e Avaliados
+          list(
+            targets = c(3, 4),
+            className = "dt-center",
+            render = formatar_inteiro
+          ),
+
+          # Peso na UF e ICA observado
+          list(
+            targets = c(5, 6),
+            className = "dt-center",
+            render = formatar_percentual
+          ),
+
+          # ICA simulado
+          list(
+            targets = 7,
+            className = "dt-center coluna-ica-simulado",
+            render = formatar_percentual
+          ),
+
+          # Diferença
+          list(
+            targets = 8,
+            className = "dt-center",
+            render = formatar_pp
+          ),
+
+          # Impacto na UF
+          list(
+            targets = 9,
+            className = "dt-center coluna-impacto",
+            render = formatar_pp
+          )
         )
       )
-    ) |>
-      formatRound(
-        columns = c("Matrículas", "Avaliados"),
-        digits = 0,
-        mark = ".",
-        dec.mark = ","
-      ) |>
-      formatPercentage(
-        columns = c(
-          "ICA observado",
-          "ICA simulado",
-          "Peso no recorte"
-        ),
-        digits = 1,
-        dec.mark = ","
-      ) |>
-      formatRound(
-        columns = c(
-          "Diferença no município (p.p.)",
-          "Impacto no recorte (p.p.)"
-        ),
-        digits = 3,
-        mark = ".",
-        dec.mark = ","
-      ) |>
-      formatStyle(
-        columns = "ICA simulado",
-        backgroundColor = "#e9f5ef",
-        color = "#1f7d55",
-        fontWeight = "bold"
-      ) |>
-      formatStyle(
-        columns = "Impacto no recorte (p.p.)",
-        backgroundColor = "#fff8e8",
-        color = "#292820",
-        fontWeight = "bold"
-      )
-  })
+    )
+
+  }, server = FALSE)
+
 
 
   # ---------------------------------------------------------------------------
